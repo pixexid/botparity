@@ -1,0 +1,22 @@
+{
+  "name": "botparity",
+  "version": "0.1.0",
+  "description": "Single-page indexability and AI-crawler parity check. Zero dependencies.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "botparity": "./bin/botparity.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test \"test/**/*.test.mjs\""
+  }
+}
