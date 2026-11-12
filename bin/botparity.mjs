@@ -14,6 +14,8 @@ import http from "node:http";
 import https from "node:https";
 import dns from "node:dns";
 import net from "node:net";
+import { realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { runChecks } from "../src/checks.mjs";
 
 export const TOTAL_DEADLINE_MS = 8000;
@@ -252,7 +254,7 @@ export async function main(argv, deps = {}) {
   else renderText(result);
 }
 
-const isMain = process.argv[1] === new URL(import.meta.url).pathname;
+const isMain = realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) await main(process.argv);
 
 export { fetchBounded, renderText };

@@ -1,6 +1,23 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { mkdtempSync, rmSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { spawnSync } from "node:child_process";
 import { main } from "../bin/botparity.mjs";
+
+test("CLI runs when invoked through a symlink", () => {
+  const dir = mkdtempSync(join(tmpdir(), "botparity-bin-"));
+  const link = join(dir, "botparity");
+  symlinkSync(new URL("../bin/botparity.mjs", import.meta.url), link);
+  try {
+    const result = spawnSync(process.execPath, [link, "https://127.0.0.1"], { encoding: "utf8" });
+    assert.equal(result.status, 2);
+    assert.match(result.stderr, /error: cannot check https:\/\/127\.0\.0\.1/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
 
 test("CLI treats only text/plain robots responses as rules", async () => {
   const originalLog = console.log;
